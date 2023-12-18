@@ -12,6 +12,8 @@
 \usepackage{subcaption}
 \usepackage{verbatim}
 \usepackage{listings}
+\usepackage{verbatimbox}
+
 
 \lstset{basicstyle=\ttfamily,
 columns=fullflexible,
@@ -55,18 +57,59 @@ This document will follow a highlighting scheme where text highlighted in differ
 Silvaco TCAD is one of the major commercial softwares in the current market that offer tools for the simulation of silicon devices. This note in particular will focus on the tools that facilitate the simulation of Silicon sensors utilized in high energy physics experiments. Particular focus will be towards Athena and Atlas. Athena is a "device-technology" simulation tool, and is widely used for simulating the electrical behavior of semiconductor devices. Athena on the other hand, is a "process-technology" simulation tool. It focuses on the simulation of the manufacturing processes involved in creating semiconductor devices, including deposition, etching, diffusion, etc. Both tools are often used hand-in-hand to offer a comprehensive study of the device to be manufactured.
 
 \section{Atlas}
-The primary reference used is Silvaco's Atlas User's Manual \cite{silvaco-atlas}. The workflow as given in \cite{silvaco-atlas} is shown below in Figure \ref{fig:atlas-workflow}. In a very primitive sense: we provide inputs to Atlas through Athena output files, and code in DeckBuild. Atlas then provides outputs that can be visualized in TonyPlot. Most of the following subsections will involve working in the DeckBuild level.
+The primary reference used is Silvaco's Atlas User's Manual \cite{silvaco-atlas}. Infact, this section will be similar to that of the User's Manual, the only differences being the highlighting of parts relevant+useful for Silicon detector simulations, and additional examples provided by the authors. The workflow as given in \cite{silvaco-atlas} is shown below in Figure \ref{fig:atlas-workflow}. In a very primitive sense: we provide inputs to Atlas through Athena output files, and code in DeckBuild. Atlas then provides outputs that can be visualized in TonyPlot. Most of the following subsections will involve working in the DeckBuild level.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=4in]{Images/atlas-input-output.png}
-    \caption{.}
+    \frame{\includegraphics[width=4in]{Images/atlas-input-output.png}}
+    \caption{Source: \cite{silvaco-atlas}}
     \label{fig:atlas-workflow}
 \end{figure}
+Every code line for Atlas will be of the following form: 
+\begin{verbatim}
+    <STATEMENT> <PARAMETER>=<VALUE>
+\end{verbatim}
+An example of a statement line is: 
+\begin{verbatim}
+    DOPING UNIFORM N.TYPE CONCENTRATION=1.0e16 REGION=1
+\end{verbatim} 
+The statement is DOPING, and all other items are parameters of the DOPING statement. UNIFORM and N.TYPE are logical parameters. Their presence on the line sets their values to true. Otherwise, they take their default values (usually false). CONCENTRATION is a parameter with floating point input. REGION is a parameter taking integers as input.
+\newline A crucial thing to note in Atlas code is the order of which statements need to be called in. 
+\begin{figure}[h]
+    \centering
+    \frame{\includegraphics[width=4in]{Images/atlas-statement-order.png}}
+    \caption[]{Ordering of statements in Atlas. Source: \cite{silvaco-atlas}}
+    \label{fig:atlas-statement-order}
+\end{figure}
+Typically the spatial units are in microns.
+\newline Chapter 21 (Statements) of \cite{silvaco-atlas} contains the syntax and parameter information of most, if not all statements used in Silvaco TCAD simulations.
 
 \subsection{Meshing!}
 
+\subsubsection{Circular mesh}
+Some structures can benefit more with a circular mesh than a rectangular mesh, we have been working with, until now. An example of how circular meshes can be defined in Atlas is shown below:
+\begin{verbatim}
+    MESH CIRCULAR
+    R.MESH LOC=0.0 SPAC=0.05
+    R.MESH LOC=0.2 SPAC=0.05
+    R.MESH LOC=0.35 SPAC=0.025
+    R.MESH LOC=0.4 SPAC=0.01
+    A.MESH LOC=0 SPAC=30
+    A.MESH LOC=360 SPAC=30
+\end{verbatim}
+The compiler is informed that the mesh will be a circular in the first mesh definition command. The commands that follow are locations and spacings of the mesh the user wants, which is similar to the rectangular meshes (X, Y), except, this time, we are working in circular coordinates (radius$\equiv$R, theta$\equiv$A).
+
+\subsubsection{Regrid/remesh}
+After generating a coarse mesh along the structure the user has defined, Atlas provides the user with the capability of generating a finer mesh in a localized region. A typical usage of this feature is in generating a finer mesh near a doping layer where the doping concentration is varying rapidly along space. 
+\begin{verbatim}
+    REGRID LOGARITHM DOPING RATIO=2 SMOOTH.KEY=4 DOPFILE=<file1> OUTFILE=<file2>
+\end{verbatim}
+The example statement given above involves a regridding that will resolve doping profiles to two orders of magnitude in change. The doping file, file1, must be specified in the first DOPING statement. The results of the regrid are saved in the file, file2. The SMOOTH.KEY parameter value selects a smoothing algorithm. A value of 4 is typically best as this algorithm tends to produce the fewest obtuse triangles.
+\hlgreen{Please note that this statement must be used AFTER the MESH, REGION, MATERIAL, ELECTRODE, and DOPING statements}.
+
+\subsubsection{Material properties}
+
+\subsubsection{Models}
 
 \bibliography{references}
-
 \end{document}

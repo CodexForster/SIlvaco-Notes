@@ -1,2 +1,2 @@
-# SIlvaco-Notes
-Notes of Silvaco Atlas and Athena 
+# Silvaco-Notes
+Notes of Silvaco's TCAD simulation tools (with a major focus on ATLAS and ATHENA).

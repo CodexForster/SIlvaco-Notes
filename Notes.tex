@@ -57,7 +57,7 @@ This document will follow a highlighting scheme where text highlighted in differ
 Silvaco TCAD is one of the major commercial softwares in the current market that offer tools for the simulation of silicon devices. This note in particular will focus on the tools that facilitate the simulation of Silicon sensors utilized in high energy physics experiments. Particular focus will be towards Athena and Atlas. Athena is a "device-technology" simulation tool, and is widely used for simulating the electrical behavior of semiconductor devices. Athena on the other hand, is a "process-technology" simulation tool. It focuses on the simulation of the manufacturing processes involved in creating semiconductor devices, including deposition, etching, diffusion, etc. Both tools are often used hand-in-hand to offer a comprehensive study of the device to be manufactured.
 
 \section{Atlas}
-The primary reference used is Silvaco's Atlas User's Manual \cite{silvaco-atlas}. Infact, this section will be similar to that of the User's Manual, the only differences being the highlighting of parts relevant+useful for Silicon detector simulations, and additional examples provided by the authors. The workflow as given in \cite{silvaco-atlas} is shown below in Figure \ref{fig:atlas-workflow}. In a very primitive sense: we provide inputs to Atlas through Athena output files, and code in DeckBuild. Atlas then provides outputs that can be visualized in TonyPlot. Most of the following subsections will involve working in the DeckBuild level.
+The primary reference used is Silvaco's Atlas User's Manual \cite{silvaco-atlas}. Infact, this section will be a condensed version of the User's Manual, the only differences being the highlighting of parts relevant+useful for Silicon detector simulations, and additional examples provided by the authors. The workflow as given in \cite{silvaco-atlas} is shown below in Figure \ref{fig:atlas-workflow}. In a very primitive sense: we provide inputs to Atlas through Athena output files, and code in DeckBuild. Atlas then provides outputs that can be visualized in TonyPlot. Most of the following subsections will involve working in the DeckBuild level.
 
 \begin{figure}[h]
     \centering
@@ -105,11 +105,23 @@ After generating a coarse mesh along the structure the user has defined, Atlas p
     REGRID LOGARITHM DOPING RATIO=2 SMOOTH.KEY=4 DOPFILE=<file1> OUTFILE=<file2>
 \end{verbatim}
 The example statement given above involves a regridding that will resolve doping profiles to two orders of magnitude in change. The doping file, file1, must be specified in the first DOPING statement. The results of the regrid are saved in the file, file2. The SMOOTH.KEY parameter value selects a smoothing algorithm. A value of 4 is typically best as this algorithm tends to produce the fewest obtuse triangles.
-\hlgreen{Please note that this statement must be used AFTER the MESH, REGION, MATERIAL, ELECTRODE, and DOPING statements}.
+\hlgreen{Please note that this statement must be used \textbf{after} the MESH, REGION, MATERIAL, ELECTRODE, and DOPING statements}.
 
-\subsubsection{Material properties}
+\subsection{Material properties}
+A region can be associated with a material and properties can be defined for that material. The MATERIAL statement can also set properties for a material of a certain type present throughout the device. The following lines are how you perform the previously stated functions in this paragraph:
+\begin{verbatim}
+    MATERIAL MATERIAL=Silicon EG300=1.12 MUN=1100
+    MATERIAL REGION=2 TAUN0=2e-7 TAUP0=1e-5
+\end{verbatim}
 
-\subsubsection{Models}
+\subsubsection{Interface properties}
+The INTERFACE statement is used to define the interface charge density and surface recombination velocity at interfaces between semiconductors and insulators. The interface of interest can also be restricted to a specific region by specifying the X.MIN, X.MAX, Y.MIN, and Y.MAX parameters. These parameters define a rectangle inside which the interface properties apply. For example:
+\begin{verbatim}
+    INTERFACE QF=3e10 X.MIN=1.0 X.MAX=2 Y.MIN=0.0 Y.MAX=0.5
+\end{verbatim}
+specifies that all interfaces between semiconductors and insulators within the rectangular region specified, have a fixed charge of 3.1010cm-2.
+
+\subsection{Models}
 
 \bibliography{references}
 \end{document}

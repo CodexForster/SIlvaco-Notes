@@ -122,6 +122,14 @@ The INTERFACE statement is used to define the interface charge density and surfa
 specifies that all interfaces between semiconductors and insulators within the rectangular region specified, have a fixed charge of 3.1010cm-2.
 
 \subsection{Models}
+The MODELS statement defines the physics models to be used by Atlas to perform the corresponding simulation. As one would guess, this forms a crucial step in obtaining realistic simulations. To help with this, Atlas provides a method to select the right models for the technology the user wants to simulate: MOS (models for MOSFET) and BIP (bipolar devices), PROGRAM (programming), and ERASE (erasing programmable devices). The reader is expected to keep note of the compatibility tables described in the User's manual: models that are/are-not compatible with other models.
+\newline The user can also select+run material-specific models by specifying the material in the MODELS runline. For example:
+\begin{verbatim}
+    MODEL MATERIAL=GaAs FLDMOB EVSATMOD=1 ECRITN=6.0e3 CONMOB
+    MODEL MATERIAL=InGaAs SRH FLDMOB EVSATMOD=1
+\end{verbatim}
+It is important to note that the impact ionization models however will have to be called for in a separate runline using the IMPACT statement. 
+\newline As a check, one can use the PRINT parameter which prints out (in the runtime output) the models and parameters that were used in the simulation.
 
 \bibliography{references}
 \end{document}

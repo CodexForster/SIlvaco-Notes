@@ -132,6 +132,17 @@ It is important to note that the impact ionization models however will have to b
 \newline As a check, one can use the PRINT parameter which prints out (in the runtime output) the models and parameters that were used in the simulation.
 
 \subsection{Numerical Methods}
-A system of unknowns can be solved by three techniques in Atlas, depending upon the coupling and the order of convergence (See wikipedia \href{https://en.wikipedia.org/wiki/Rate_of_convergence}{article} for more info), namely: GUMMEL, NEWTON, and BLOCK. A combination of these methods can also be used, however the statement calls in such scenarios will depend on the model it is being applied to. A detailed desription on guidelines to these methods are available in Chapter 20 of \cite{silvaco-atlas}.
+A system of unknowns can be solved by three techniques in Atlas, depending upon the coupling and the order of convergence (See wikipedia \href{https://en.wikipedia.org/wiki/Rate_of_convergence}{article} for more info), namely: GUMMEL, NEWTON, and BLOCK. A combination of these methods can also be used, however the statement calls in such scenarios will depend on the model it is being applied to. A detailed desription on guidelines to these methods are available in Chapter 20 of \cite{silvaco-atlas}. For basic drift-diffusion calculations, using
+\begin{verbatim}
+    METHOD GUMMEL NEWTON
+\end{verbatim}
+will cause the solver to start with GUMMEL iterations and then switch to NEWTON if convergence is not achieved.
+\newline A relevant statement to silicon detector simulations is controlling forhow many types of carriers (between electrons and/or holes), the continuity equations need to be solved. The examples statements involved are:
+\begin{verbatim}
+    METHOD CARRIERS=2 (default)
+    METHOD CARRIERS=1 HOLE
+    METHOD CARRIERS=0 (solve potential)
+\end{verbatim}
+
 \bibliography{references}
 \end{document}

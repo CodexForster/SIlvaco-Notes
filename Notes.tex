@@ -122,7 +122,7 @@ The INTERFACE statement is used to define the interface charge density and surfa
 specifies that all interfaces between semiconductors and insulators within the rectangular region specified, have a fixed charge of 3.1010cm-2.
 
 \subsection{Models}
-The MODELS statement defines the physics models to be used by Atlas to perform the corresponding simulation. As one would guess, this forms a crucial step in obtaining realistic simulations. To help with this, Atlas provides a method to select the right models for the technology the user wants to simulate: MOS (models for MOSFET) and BIP (bipolar devices), PROGRAM (programming), and ERASE (erasing programmable devices). The reader is expected to keep note of the compatibility tables described in the User's manual: models that are/are-not compatible with other models.
+The MODELS statement defines the physics models to be used by Atlas to perform the corresponding simulation. As one would guess, this forms a crucial step in obtaining realistic simulations. To help with this, Atlas provides a method to select the right models for the technology the user wants to simulate: MOS (models for MOSFET) and BIP (bipolar devices), PROGRAM (programming), and ERASE (erasing programmable devices). The reader is expected to keep note of the compatibility tables (for mobility models) described in the User's manual: models that are/are-not compatible with other models.
 \newline The user can also select+run material-specific models by specifying the material in the MODELS runline. For example:
 \begin{verbatim}
     MODEL MATERIAL=GaAs FLDMOB EVSATMOD=1 ECRITN=6.0e3 CONMOB
@@ -143,6 +143,15 @@ will cause the solver to start with GUMMEL iterations and then switch to NEWTON 
     METHOD CARRIERS=1 HOLE
     METHOD CARRIERS=0 (solve potential)
 \end{verbatim}
+
+\subsection{Examples}
+This subsection aims to serve as a better look-up section for the example library of Silvaco TCAD to help save the reader time from looking through the example directories, one folder at a time. This section will also look to make note of the nuances that were not explained in the code's comments.
+
+\subsubsection{Optoelectronics}
+opteoex01 is an example simulation for a PIN photodiode. The mesh, region, and electrode definitions are straightforwards and self-explanatory. The main takeaway is from the doping and the models used for these doping levels in optoelectronics' use-case. 
+\newline The bulk detector volume is n-type and there are two other doping regions (gaussian) towards the top and bottom. 
+\newline The example uses the models: \begin{verbatim}srh auger conmob fldmob \end{verbatim}
+The SRH (Shockley-Read-Hall, for minority carrier lifetime and not conc dependent) and Auger (Auger recombination) are non-radiative (not involving a photon) recombination models which are needed in photodiode applications. A simple and introductory reference for these two models can be found in \href{https://www.pveducation.org/pvcdrom/pn-junctions/types-of-recombination}{this} link. \href{ https://en.wikipedia.org/wiki/Carrier_generation_and_recombination}{Wikipedia} also has a good article towards the same. conmob and fldmob are mobility models which define mobility as a function of concentration and electric field respectively. According to \cite{silvaco-atlas}, the later is required to model any type of velocity saturation effect.
 
 \bibliography{references}
 \end{document}

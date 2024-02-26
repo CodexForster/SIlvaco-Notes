@@ -153,5 +153,17 @@ opteoex01 is an example simulation for a PIN photodiode. The mesh, region, and e
 \newline The example uses the models: \begin{verbatim}srh auger conmob fldmob \end{verbatim}
 The SRH (Shockley-Read-Hall, for minority carrier lifetime and not conc dependent) and Auger (Auger recombination) are non-radiative (not involving a photon) recombination models which are needed in photodiode applications. A simple and introductory reference for these two models can be found in \href{https://www.pveducation.org/pvcdrom/pn-junctions/types-of-recombination}{this} link. \href{ https://en.wikipedia.org/wiki/Carrier_generation_and_recombination}{Wikipedia} also has a good article towards the same. conmob and fldmob are mobility models which define mobility as a function of concentration and electric field respectively. According to \cite{silvaco-atlas}, the later is required to model any type of velocity saturation effect.
 
+\section{Silicon detector simulations}
+\subsection{PN diode}
+
+\subsection{Weighting field simulations}
+Emphasis on differences in WF of pixel and strip geometries; is the signal amplitude independent of sensor thickness in the AC-LGADs (pads and strips) sensors we work with.
+\subsection{LGAD simulations}
+\subsubsection{ATHENA}
+\subsubsection{ATLAS 3D}
+\subsubsection{ATLAS 2D}
+
+
+\subsection{}
 \bibliography{references}
 \end{document}
